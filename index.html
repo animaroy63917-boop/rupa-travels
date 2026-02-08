@@ -3,34 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rupa Travel Agency | Explore North East India</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Rupa Travel Agency | Explore the Northeast</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fdfbf7; }
-        h1 { font-family: 'Playfair Display', serif; }
-        .hero-pattern { background-color: #064e3b; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23065f46' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        :root {
+            --primary: #004d40;
+            --accent: #25D366;
+            --white: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text);
+            scroll-behavior: smooth;
+        }
+
+        /* Hero Section with hero.jpg */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('hero.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .hero-content h1 { font-size: 3.5rem; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero-content p { font-size: 1.2rem; margin-bottom: 30px; }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background: var(--accent); transform: scale(1.05); }
+
+        /* Destination Section */
+        .section-title { text-align: center; padding: 50px 0 20px; font-size: 2.5rem; color: var(--primary); }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .card-body h3 { margin: 0 0 10px 0; color: var(--primary); }
+
+        /* Booking Form */
+        #booking { background: #f4f7f6; padding: 80px 20px; }
+        .booking-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        }
+        .booking-form input, .booking-form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <nav class="flex justify-between items-center px-12 py-6 bg-white border-b border-emerald-900/10 shadow-sm">
-        <div class="text-2xl font-bold tracking-tighter text-emerald-900 uppercase">
-            <a href="index.html">RUPA<span class="font-light text-emerald-700 ml-2">Travel Agency</span></a>
-        </div>
-        <div class="flex items-center gap-8">
-            <a href="tel:+919101035061" class="hidden md:block text-emerald-800 font-bold text-sm">📞 +91 91010 35061</a>
-            <a href="booking.html" class="bg-emerald-900 text-white px-6 py-2 rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-800 transition">Book Trip</a>
-        </div>
-    </nav>
 
-    <header class="hero-pattern h-[80vh] flex items-center justify-center text-center px-6">
-        <div class="max-w-4xl p-12 backdrop-blur-sm bg-emerald-900/20 border border-emerald-400/20 text-white">
-            <h1 class="text-6xl md:text-8xl mb-8 italic leading-tight">Authentic North East</h1>
-            <p class="mb-10 text-emerald-100 uppercase tracking-[0.3em] text-sm font-bold">Guwahati • Shillong • Tawang • Kaziranga</p>
-            <a href="booking.html" class="bg-white text-emerald-900 px-12 py-5 font-bold uppercase tracking-widest hover:bg-stone-100 transition shadow-2xl inline-block">
-                Start Your Journey
-            </a>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Experience the Unseen Northeast</h1>
+            <p>From the valleys of Assam to the peaks of Arunachal.</p>
+            <a href="#booking" class="btn">Plan Your Trip Now</a>
         </div>
-    </header>
+    </section>
+
+    <h2 class="section-title">Our Featured Packages</h2>
+    <div class="container">
+        <div class="card">
+            <img src="assam.jpg" alt="Assam">
+            <div class="card-body">
+                <h3>Assam Gateways</h3>
+                <p>Explore lush tea gardens and the mighty Brahmaputra.</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="meghalaya.jpg" alt="Meghalaya">
+            <div class="card-body">
+                <h3>Meghalaya Mist</h3>
+                <p>Walk among the clouds in the abode of rain.</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="arunachal.jpg" alt="Arunachal">
+            <div class="card-body">
+                <h3>Arunachal Peaks</h3>
+                <p>Discover the land of the rising sun and ancient monasteries.</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="manipur.jpg" alt="Manipur">
+            <div class="card-body">
+                <h3>Manipur Magic</h3>
+                <p>Witness the floating islands and unique culture.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="booking">
+        <div class="booking-form">
+            <h2 style="text-align: center; color: var(--primary);">Quick Booking Request</h2>
+            <form id="travelForm">
+                <input type="text" id="name" placeholder="Your Full Name" required>
+                <input type="tel" id="phone" placeholder="WhatsApp Number" required>
+                <select id="destination">
+                    <option value="" disabled selected>Select Destination</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Arunachal">Arunachal</option>
+                    <option value="Manipur">Manipur</option>
+                </select>
+                <input type="number" id="guests" placeholder="Number of Guests" min="1">
+                <button type="submit" class="submit-btn">Send My Inquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('travelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const bookingData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                destination: document.getElementById('destination').value,
+                guests: document.getElementById('guests').value
+            };
+
+            try {
+                // Link to your Live Render Server
+                const response = await fetch('https://rupa-travels.onrender.com/api/book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+
+                if (response.ok) {
+                    window.location.href = "thankyou.html";
+                } else {
+                    alert("Something went wrong. Please try again!");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Server is sleeping. Please wait 30 seconds and try again!");
+            }
+        });
+    </script>
 </body>
 </html>
