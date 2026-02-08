@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Desk | Rupa Travel Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; }</style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div id="admin-gatekeeper" style="display: none;">
+        <div class="max-w-6xl mx-auto">
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b-4 border-emerald-900 pb-6 gap-4">
+                <div>
+                    <h1 class="text-4xl font-black text-emerald-900 tracking-tighter uppercase">Rupa Travel Agency</h1>
+                    <p class="text-emerald-600 font-bold text-xs mt-1 tracking-widest uppercase italic">Guwahati Control Desk</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleDeleteMode()" id="clear-mode-btn" class="bg-white text-gray-500 border border-gray-200 px-4 py-2 rounded-lg text-[10px] font-bold uppercase transition hover:bg-red-50 hover:text-red-600">Manage Leads</button>
+                    <button onclick="location.reload()" class="text-gray-400 hover:text-emerald-900 text-[10px] font-bold uppercase underline">Logout</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-emerald-100">
+                    <div class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Total Leads</div>
+                    <div id="total-count" class="text-3xl font-black text-emerald-900">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-emerald-100">
+                    <div class="text-[10px] font-black uppercase text-gray-400 tracking-widest mb-1">Total Guests</div>
+                    <div id="guest-count" class="text-3xl font-black text-emerald-700">0</div>
+                </div>
+                <div class="flex items-end">
+                    <input type="text" id="adminSearch" onkeyup="filterLeads()" placeholder="Search name or phone..." class="w-full px-4 py-4 rounded-xl border border-emerald-100 outline-none focus:border-emerald-600 shadow-sm text-sm" />
+                </div>
+            </div>
+
+            <div class="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-emerald-900 text-white text-[10px] uppercase tracking-[0.2em]">
+                        <tr>
+                            <th class="p-6">Traveler</th>
+                            <th class="p-6">Destination</th>
+                            <th class="p-6">Office Status</th>
+                            <th class="p-6 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-list" class="divide-y divide-gray-50 text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteMode = false;
+        let allBookings = [];
+        const key = prompt("Enter Rupa Travel Agency Key:");
+
+        if (key === "Guwahati2026") {
+            document.getElementById('admin-gatekeeper').style.display = 'block';
+            fetchData();
+            setInterval(fetchData, 10000); // Auto-refresh every 10 seconds
+        } else {
+            window.location.href = 'index.html';
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/bookings');
+                allBookings = await response.json();
+                filterLeads();
+            } catch (e) { console.error("Server Offline"); }
+        }
+
+        // NEW: Function to toggle Status between Pending and Completed
+        async function updateStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'Completed' ? 'Pending' : 'Completed';
+            try {
+                await fetch(`http://localhost:3000/api/admin/bookings/${id}/status`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ status: newStatus })
+                });
+                fetchData(); // Refresh the list
+            } catch (e) { alert("Failed to update status."); }
+        }
+
+        async function deleteBooking(id) {
+            if (confirm("Permanently delete this lead?")) {
+                await fetch(`http://localhost:3000/api/admin/bookings/${id}`, { method: 'DELETE' });
+                fetchData();
+            }
+        }
+
+        function toggleDeleteMode() {
+            deleteMode = !deleteMode;
+            const btn = document.getElementById('clear-mode-btn');
+            btn.innerText = deleteMode ? "Exit Delete Mode" : "Manage Leads";
+            btn.classList.toggle('bg-red-600');
+            btn.classList.toggle('text-white');
+            renderTable(allBookings);
+        }
+
+        function filterLeads() {
+            const term = document.getElementById('adminSearch').value.toLowerCase();
+            const filtered = allBookings.filter(b => 
+                b.name.toLowerCase().includes(term) || b.phone.includes(term)
+            );
+            renderTable(filtered);
+        }
+
+        function renderTable(data) {
+            const list = document.getElementById('leads-list');
+            document.getElementById('total-count').innerText = data.length;
+            const totalGuests = data.reduce((sum, b) => sum + (parseInt(b.travelers) || 0), 0);
+            document.getElementById('guest-count').innerText = totalGuests;
+
+            if (data.length === 0) {
+                list.innerHTML = '<tr><td colspan="4" class="p-20 text-center text-gray-300 italic">No bookings found.</td></tr>';
+                return;
+            }
+
+            list.innerHTML = data.map(b => {
+                const isDone = b.status === 'Completed';
+                const msg = `*RUPA TRAVEL AGENCY*%0A%0AHello ${b.name}, we received your trip request for *${b.city}*.`;
+                const waLink = `https://wa.me/${b.phone}?text=${msg}`;
+
+                return `
+                <tr class="${isDone ? 'bg-gray-50 opacity-60' : 'hover:bg-emerald-50/40'} transition">
+                    <td class="p-6">
+                        <div class="font-bold text-emerald-900 text-base mb-1">${b.name}</div>
+                        <a href="tel:${b.phone}" class="text-blue-600 font-black text-sm hover:underline">📞 ${b.phone}</a>
+                    </td>
+                    <td class="p-6">
+                        <div class="text-[10px] text-gray-400 font-black tracking-widest uppercase">${b.destination}</div>
+                        <div class="text-emerald-700 text-sm font-semibold italic">📍 ${b.city}</div>
+                    </td>
+                    <td class="p-6">
+                        <button onclick="updateStatus('${b.id}', '${b.status}')" 
+                                class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${isDone ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                            ● ${b.status || 'Pending'}
+                        </button>
+                    </td>
+                    <td class="p-6 text-right">
+                        <div class="flex flex-col gap-2 items-end">
+                            <a href="${waLink}" target="_blank" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase shadow-md">WhatsApp</a>
+                            ${deleteMode ? `<button onclick="deleteBooking(${b.id})" class="bg-red-500 text-white px-4 py-1 rounded text-[9px] font-bold uppercase mt-1">Delete</button>` : ''}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).reverse().join('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan Your Journey | Rupa Travel Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; background-color: #fdfbf7; }</style>
+</head>
+<body class="pb-20">
+    <nav class="px-12 py-8 flex justify-between items-center">
+        <a href="index.html" class="text-emerald-900 font-bold text-xs tracking-widest uppercase">← Back to Home</a>
+        <div class="text-sm font-bold text-emerald-800 uppercase tracking-tighter">Rupa <span class="font-light">Travel Agency</span></div>
+    </nav>
+
+    <div class="max-w-2xl mx-auto px-6">
+        <h1 class="text-5xl font-serif italic text-emerald-900 mb-4 text-center">Start Your Adventure</h1>
+        <p class="text-center text-emerald-700 mb-12 italic">Your trusted travel partner in the North East.</p>
+        
+        <form id="bookingForm" class="bg-white p-10 shadow-xl border border-emerald-900/5 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="text" id="name" placeholder="Full Name" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 transition" required>
+                <input type="tel" id="phone" placeholder="Phone Number (+91)" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 transition" required>
+            </div>
+            
+            <input type="email" id="email" placeholder="Email Address" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 transition" required>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-800 mb-1">State</label>
+                    <select id="destination" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 bg-white">
+                        <option>Assam</option><option>Meghalaya</option><option>Arunachal</option><option>Sikkim</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-800 mb-1">Specific City / Place</label>
+                    <input type="text" id="city" placeholder="e.g. Kaziranga, Majuli" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 transition" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-800 mb-1">Vehicle Preference</label>
+                    <select id="vehicle" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600 bg-white">
+                        <option value="Car">SUV / Private Car</option>
+                        <option value="Bus">Traveler / Bus</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-800 mb-1">Date</label>
+                        <input type="date" id="date" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600" required>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-emerald-800 mb-1">Guests</label>
+                        <input type="number" id="travelers" min="1" class="w-full border-b-2 border-emerald-50 py-3 outline-none focus:border-emerald-600" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-900 text-white py-5 font-bold uppercase tracking-widest hover:bg-emerald-800 transition">Request Itinerary</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                destination: document.getElementById('destination').value,
+                city: document.getElementById('city').value,
+                vehicle: document.getElementById('vehicle').value,
+                date: document.getElementById('date').value,
+                travelers: document.getElementById('travelers').value
+            };
+
+            const response = await fetch('http://localhost:3000/api/book', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            if(response.ok) {
+                window.location.href = 'thankyou.html'; 
+            }
+        });
+    </script>
+</body>
+</html>
