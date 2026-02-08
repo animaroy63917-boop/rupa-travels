@@ -68,7 +68,7 @@
 
         async function fetchData() {
             try {
-                const response = await fetch('http://localhost:3000/api/admin/bookings');
+                const response = await fetch('https://rupa-travels.onrender.com/api/admin/bookings');
                 allBookings = await response.json();
                 filterLeads();
             } catch (e) { console.error("Server Offline"); }
@@ -78,7 +78,7 @@
         async function updateStatus(id, currentStatus) {
             const newStatus = currentStatus === 'Completed' ? 'Pending' : 'Completed';
             try {
-                await fetch(`http://localhost:3000/api/admin/bookings/${id}/status`, {
+                await fetch(`https://rupa-travels.onrender.com/api/admin/bookings/${id}/status`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ status: newStatus })
