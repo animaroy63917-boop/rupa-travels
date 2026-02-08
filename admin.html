@@ -4,77 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Desk | Rupa Travels</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        .admin-container { padding: 40px; max-width: 1200px; margin: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { padding: 15px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background-color: #004d40; color: white; }
-        .status-pending { color: orange; font-weight: bold; }
-        .whatsapp-btn { 
-            background-color: #25D366; 
-            color: white; 
-            padding: 8px 12px; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            font-size: 12px;
-        }
+        :root { --primary: #004d40; --secondary: #25D366; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .admin-header { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-bottom: 4px solid var(--primary); }
+        h1 { color: var(--primary); margin: 0; letter-spacing: 1px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        th { background: var(--primary); color: white; padding: 18px; text-align: left; text-transform: uppercase; font-size: 13px; }
+        td { padding: 18px; border-bottom: 1px solid #eee; }
+        .whatsapp-btn { background: var(--secondary); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; background: #fff3e0; color: #ef6c00; }
+        .action-btns button { padding: 6px 10px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; font-size: 11px; }
+        .confirm-btn { background: #e8f5e9; color: #2e7d32; }
+        .cancel-btn { background: #ffebee; color: #c62828; }
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <div class="admin-header">
         <h1>RUPA TRAVEL AGENCY</h1>
-        <p>GUWAHATI CONTROL DESK</p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Traveler</th>
-                    <th>Destination</th>
-                    <th>Guests</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="bookingsTable">
-                </tbody>
-        </table>
+        <p style="color: #666; margin: 5px 0 0 0;">GUWAHATI CONTROL DESK</p>
     </div>
 
+    <table>
+        <thead>
+            <tr>
+                <th>Traveler</th>
+                <th>Destination</th>
+                <th>Guests</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="bookingsTable"></tbody>
+    </table>
+
     <script>
-        async function fetchBookings() {
-            try {
-                // Connecting to your live Render brain
-                const response = await fetch('https://rupa-travels.onrender.com/api/admin/bookings');
-                const bookings = await response.json();
-                const tableBody = document.getElementById('bookingsTable');
-                tableBody.innerHTML = '';
+        const API_URL = 'https://rupa-travel-agency-server.onrender.com'; // Verify your URL here
 
-                bookings.forEach(booking => {
-                    // This creates the professional WhatsApp message format we discussed
-                    const message = `Hello ${booking.name}, this is Rupa Travel Agency! ✈️%0A%0AWe received your booking request for ${booking.destination}.%0A%0ADetails:%0A- Guests: ${booking.guests}%0A- Status: ${booking.status}%0A%0APlease let us know a good time to call you to finalize the itinerary!`;
-                    
-                    const whatsappUrl = `https://wa.me/${booking.phone}?text=${message}`;
-
-                    const row = `
-                        <tr>
-                            <td><strong>${booking.name}</strong><br>${booking.phone}</td>
-                            <td>${booking.destination}</td>
-                            <td>${booking.guests}</td>
-                            <td class="status-pending">${booking.status}</td>
-                            <td>
-                                <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">WHATSAPP</a>
-                            </td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                console.error('Error fetching bookings:', error);
-            }
+        async function updateStatus(id, newStatus) {
+            await fetch(`${API_URL}/api/admin/bookings/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            fetchBookings();
         }
 
-        // Run this when the page opens
+        async function fetchBookings() {
+            const response = await fetch(`${API_URL}/api/admin/bookings`);
+            const bookings = await response.json();
+            const tableBody = document.getElementById('bookingsTable');
+            tableBody.innerHTML = '';
+
+            bookings.forEach(booking => {
+                const message = `Hello ${booking.name}, this is Rupa Travel Agency! ✈️%0A%0AWe received your booking request for ${booking.destination}.%0A%0ADetails:%0A- Guests: ${booking.guests}%0A- Status: ${booking.status}%0A%0APlease let us know a good time to call you!`;
+                const whatsappUrl = `https://wa.me/${booking.phone}?text=${message}`;
+
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><strong>${booking.name}</strong><br><span style="color:#666; font-size:12px;">${booking.phone}</span></td>
+                        <td>${booking.destination}</td>
+                        <td>${booking.guests || '1'}</td>
+                        <td><span class="status-badge">${booking.status}</span></td>
+                        <td class="action-btns">
+                            <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">WHATSAPP</a>
+                            <button class="confirm-btn" onclick="updateStatus('${booking.id}', 'Confirmed')">Confirm</button>
+                            <button class="cancel-btn" onclick="updateStatus('${booking.id}', 'Cancelled')">Cancel</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
         fetchBookings();
     </script>
 </body>
