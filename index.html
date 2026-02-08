@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rupa Travel Agency | Explore the Northeast</title>
+    <title>Rupa Travel Agency | Premium Northeast Tours</title>
     <style>
         :root {
             --primary: #004d40;
@@ -21,7 +21,7 @@
             scroll-behavior: smooth;
         }
 
-        /* Hero Section with hero.jpg */
+        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('hero.jpg');
             background-size: cover;
@@ -72,7 +72,7 @@
         .card-body { padding: 20px; }
         .card-body h3 { margin: 0 0 10px 0; color: var(--primary); }
 
-        /* Booking Form */
+        /* Booking Form Styles */
         #booking { background: #f4f7f6; padding: 80px 20px; }
         .booking-form {
             max-width: 600px;
@@ -82,6 +82,7 @@
             border-radius: 20px;
             box-shadow: 0 15px 30px rgba(0,0,0,0.05);
         }
+        .booking-form h2 { text-align: center; color: var(--primary); margin-bottom: 30px; }
         .booking-form input, .booking-form select {
             width: 100%;
             padding: 12px;
@@ -89,6 +90,7 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
+            font-size: 1rem;
         }
         .submit-btn {
             width: 100%;
@@ -98,66 +100,79 @@
             padding: 15px;
             border-radius: 8px;
             font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
         }
+        .submit-btn:hover { background: var(--accent); }
     </style>
 </head>
 <body>
 
     <section class="hero">
         <div class="hero-content">
-            <h1>Experience the Unseen Northeast</h1>
-            <p>From the valleys of Assam to the peaks of Arunachal.</p>
-            <a href="#booking" class="btn">Plan Your Trip Now</a>
+            <h1>Discover the Unseen Northeast</h1>
+            <p>Premium travel experiences across Assam, Meghalaya, and beyond.</p>
+            <a href="#booking" class="btn">Start Your Journey</a>
         </div>
     </section>
 
-    <h2 class="section-title">Our Featured Packages</h2>
+    <h2 class="section-title">Explore Our Destinations</h2>
     <div class="container">
         <div class="card">
             <img src="assam.jpg" alt="Assam">
             <div class="card-body">
                 <h3>Assam Gateways</h3>
-                <p>Explore lush tea gardens and the mighty Brahmaputra.</p>
+                <p>Experience the tea capital and the mighty Brahmaputra river.</p>
             </div>
         </div>
         <div class="card">
             <img src="meghalaya.jpg" alt="Meghalaya">
             <div class="card-body">
                 <h3>Meghalaya Mist</h3>
-                <p>Walk among the clouds in the abode of rain.</p>
+                <p>Adventure through living root bridges and cascading waterfalls.</p>
             </div>
         </div>
         <div class="card">
             <img src="arunachal.jpg" alt="Arunachal">
             <div class="card-body">
                 <h3>Arunachal Peaks</h3>
-                <p>Discover the land of the rising sun and ancient monasteries.</p>
+                <p>The land of rising sun and serene mountain monasteries.</p>
             </div>
         </div>
         <div class="card">
             <img src="manipur.jpg" alt="Manipur">
             <div class="card-body">
                 <h3>Manipur Magic</h3>
-                <p>Witness the floating islands and unique culture.</p>
+                <p>Discover Loktak Lake and the unique culture of the Jewel Land.</p>
             </div>
         </div>
     </div>
 
     <section id="booking">
         <div class="booking-form">
-            <h2 style="text-align: center; color: var(--primary);">Quick Booking Request</h2>
+            <h2>Quick Booking Request</h2>
             <form id="travelForm">
                 <input type="text" id="name" placeholder="Your Full Name" required>
                 <input type="tel" id="phone" placeholder="WhatsApp Number" required>
-                <select id="destination">
+                
+                <select id="destination" required>
                     <option value="" disabled selected>Select Destination</option>
                     <option value="Assam">Assam</option>
                     <option value="Meghalaya">Meghalaya</option>
                     <option value="Arunachal">Arunachal</option>
                     <option value="Manipur">Manipur</option>
                 </select>
-                <input type="number" id="guests" placeholder="Number of Guests" min="1">
+
+                <select id="vehicle" required>
+                    <option value="" disabled selected>Choose a Vehicle</option>
+                    <option value="Sedan (4 Seater)">Sedan (Dzire / Etios)</option>
+                    <option value="SUV (6-7 Seater)">SUV (Innova / Scorpio)</option>
+                    <option value="Tempo Traveler">Tempo Traveler (12-17 Seater)</option>
+                    <option value="Luxury SUV">Premium SUV (Fortuner)</option>
+                </select>
+
+                <input type="number" id="guests" placeholder="Number of Guests" min="1" required>
                 <button type="submit" class="submit-btn">Send My Inquiry</button>
             </form>
         </div>
@@ -171,11 +186,12 @@
                 name: document.getElementById('name').value,
                 phone: document.getElementById('phone').value,
                 destination: document.getElementById('destination').value,
+                vehicle: document.getElementById('vehicle').value,
                 guests: document.getElementById('guests').value
             };
 
             try {
-                // Link to your Live Render Server
+                // Link to your Live Render Brain
                 const response = await fetch('https://rupa-travels.onrender.com/api/book', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -185,11 +201,11 @@
                 if (response.ok) {
                     window.location.href = "thankyou.html";
                 } else {
-                    alert("Something went wrong. Please try again!");
+                    alert("Submission failed. Please check your internet.");
                 }
             } catch (error) {
                 console.error("Error:", error);
-                alert("Server is sleeping. Please wait 30 seconds and try again!");
+                alert("Server is waking up. Please wait 30 seconds and try again!");
             }
         });
     </script>
