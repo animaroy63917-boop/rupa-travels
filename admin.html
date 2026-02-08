@@ -3,79 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Desk | Rupa Travels</title>
+    <title>Rupa Travels | Control Desk</title>
     <style>
-        :root { --primary: #004d40; --secondary: #25D366; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .admin-header { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-bottom: 4px solid var(--primary); }
-        h1 { color: var(--primary); margin: 0; letter-spacing: 1px; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        th { background: var(--primary); color: white; padding: 18px; text-align: left; text-transform: uppercase; font-size: 13px; }
-        td { padding: 18px; border-bottom: 1px solid #eee; }
-        .whatsapp-btn { background: var(--secondary); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; }
-        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; background: #fff3e0; color: #ef6c00; }
-        .action-btns button { padding: 6px 10px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; font-size: 11px; }
-        .confirm-btn { background: #e8f5e9; color: #2e7d32; }
-        .cancel-btn { background: #ffebee; color: #c62828; }
+        :root {
+            --primary: #004d40;
+            --accent: #25D366;
+            --bg: #e0f2f1;
+            --text: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Security Guard Style */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-box input {
+            padding: 12px;
+            width: 250px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .login-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Main Dashboard Style */
+        #adminDashboard {
+            display: none;
+            width: 95%;
+            max-width: 1200px;
+            padding: 40px 0;
+        }
+
+        .header {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 { margin: 0; color: var(--primary); letter-spacing: 1px; }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .stat-card h3 { margin: 0; font-size: 2em; color: var(--primary); }
+
+        table {
+            width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            border-collapse: collapse;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td { padding: 20px; border-bottom: 1px solid #eee; }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: #fff3e0; color: #ef6c00; }
+        .status-confirmed { background: #e8f5e9; color: #2e7d32; }
+        .status-cancelled { background: #ffebee; color: #c62828; }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-whatsapp { background: var(--accent); color: white; margin-right: 5px; }
+        .btn-confirm { background: #2e7d32; color: white; margin-right: 5px; }
+        .btn-cancel { background: #c62828; color: white; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
     </style>
 </head>
 <body>
-    <div class="admin-header">
-        <h1>RUPA TRAVEL AGENCY</h1>
-        <p style="color: #666; margin: 5px 0 0 0;">GUWAHATI CONTROL DESK</p>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="color: var(--primary)">Admin Access</h2>
+            <p>Please enter the Guwahati Gate Password</p>
+            <input type="password" id="passInput" placeholder="Enter Password...">
+            <button onclick="checkPass()">Unlock Dashboard</button>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Traveler</th>
-                <th>Destination</th>
-                <th>Guests</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="bookingsTable"></tbody>
-    </table>
-
-    <script>
-        const API_URL = 'https://rupa-travel-agency-server.onrender.com'; // Verify your URL here
-
-        async function updateStatus(id, newStatus) {
-            await fetch(`${API_URL}/api/admin/bookings/${id}/status`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            });
-            fetchBookings();
-        }
-
-        async function fetchBookings() {
-            const response = await fetch(`${API_URL}/api/admin/bookings`);
-            const bookings = await response.json();
-            const tableBody = document.getElementById('bookingsTable');
-            tableBody.innerHTML = '';
-
-            bookings.forEach(booking => {
-                const message = `Hello ${booking.name}, this is Rupa Travel Agency! ✈️%0A%0AWe received your booking request for ${booking.destination}.%0A%0ADetails:%0A- Guests: ${booking.guests}%0A- Status: ${booking.status}%0A%0APlease let us know a good time to call you!`;
-                const whatsappUrl = `https://wa.me/${booking.phone}?text=${message}`;
-
-                tableBody.innerHTML += `
-                    <tr>
-                        <td><strong>${booking.name}</strong><br><span style="color:#666; font-size:12px;">${booking.phone}</span></td>
-                        <td>${booking.destination}</td>
-                        <td>${booking.guests || '1'}</td>
-                        <td><span class="status-badge">${booking.status}</span></td>
-                        <td class="action-btns">
-                            <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">WHATSAPP</a>
-                            <button class="confirm-btn" onclick="updateStatus('${booking.id}', 'Confirmed')">Confirm</button>
-                            <button class="cancel-btn" onclick="updateStatus('${booking.id}', 'Cancelled')">Cancel</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-        fetchBookings();
-    </script>
-</body>
-</html>
+    <div id="adminDashboard">
+        <div class="header">
+            <div>
+                <h1>RUPA TRAVELS</h1>
+                <p style="margin: 5px 0 0 0; color: #666;">Guwahati Control Desk | Admin Panel</p>
+            </div>
